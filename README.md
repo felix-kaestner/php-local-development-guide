@@ -3,12 +3,12 @@
 A simple setup and config to run a local web server to serve a php web.
 
 The following is a simple guide to quickly bootstrap a php application on your local machine.
-If you are not familiar with docker, this will help you to start a web application in development 
-mode on your host machine via a simple web server. 
+If you are not familiar with docker, this will help you to start a web application in development
+mode on your host machine via a simple web server.
 We will use `nginx` to run a web server and `supervisor` to start everything simultaneously.
 
-
 ### Prerequisites
+
 For this purpose both `nginx` and `supervisor` need to be installed on your system.
 This guide assumes you are using php 7.4. If not, then adjust the path inside the supervisor.conf with your given php version.
 
@@ -17,10 +17,11 @@ Also make sure you have `composer` installed, if you want to quickly bootstrap a
 
 **ATTENTION**
 
-For this guide, we will call the application we want to develop `contao`. 
+For this guide, we will call the application we want to develop `contao`.
 You will want to adjust and rename the files `supervisor.conf` and `contao` to the given name of your application.
 
 #### `Ubuntu / Debian`
+
 For any debian-based system (including Ubuntu) just run the following to install both nginx and supervisor
 
 ```bash
@@ -32,7 +33,7 @@ Simply install `mariadb-server` instead.
 
 If you want, you can install php, with a couple of extensions with:
 
-````bash
+`````bash
 sudo apt install -y php7.4 php7.4-{dom,gd,curl,intl,mbstring,mysql,xdebug,fpm,zip}
 ```
 
@@ -71,7 +72,7 @@ $ sudo chown -R www-data:www-data /var/lib/phpmyadmin
 ### Quickstart
 
 Create a new application, e.g. with composer:
-````bash
+```bash
 $ composer create-project contao/managed-edition $PWD/contao '4.8'
 ```
 
@@ -106,6 +107,22 @@ Then go on and configure mysql/mariadb with:
 $ sudo mysql_secure_installation
 ```
 
+You will also need to adjust the php configuration so that `php-fpm` has the deamonize flag set to `no` (it is set to yes by default).
+To do so just copy the `php-fpm.conf` provided with this repository to the correct location.
+
+```bash
+$ sudo cp php-fpm.conf /etc/php/7.4/fpm/php-fpm.conf
+```
+
+_Alternative_
+Use a `sed` command to set it in place:
+```bash
+$ sudo sed -i "/;daemonize = yes/c\daemonize = no" /etc/php/7.4/fpm/php-fpm.conf
+```
+
+_Note:_
+Be sure to replace `7.4` with your php version in all of the commands.
+
 ####  Configuration
 
 Both `nginx` and `supervisor` need to be configured. The configuration files are provided in this directory.
@@ -127,7 +144,7 @@ Copy the nginx configuration `contao` into `/etc/nginx/sites-available`
 $ sudo cp contao /etc/nginx/sites-available/
 ```
 
-The `sites-available` directory of nginx should always contain the configurations of all available web servers. 
+The `sites-available` directory of nginx should always contain the configurations of all available web servers.
 In contrast, the `sites-enabled` directory should contain symlinks to the configurations that are currently enabled.
 We will create this by executing:
 
@@ -135,8 +152,8 @@ We will create this by executing:
 $ sudo ln -s /etc/nginx/sites-available/contao /etc/nginx/sites-enabled/contao
 ```
 
-If you would then like to currently disable the ordered.online domain while running nginx for other web server, 
-you could simply delete the symlink inside `sites-enabled`, while this would still reserve the configuration inside 
+If you would then like to currently disable the ordered.online domain while running nginx for other web server,
+you could simply delete the symlink inside `sites-enabled`, while this would still reserve the configuration inside
 `sites-available` for you the be able to enable it again, by creating the symlink with the command above.
 
 _Alternative_
@@ -150,7 +167,7 @@ $ sudo ln -s $PWD/contao /etc/nginx/sites-enabled/contao
 If you followed all the steps above, you are now able to run the local web server by simply running:
 
 ```bash
-$ sudo supervisord -n -c  /etc/supervisor/supervisord.conf 
+$ sudo supervisord -n -c  /etc/supervisor/supervisord.conf
 ```
 
 *NOTE:*
@@ -199,7 +216,8 @@ $ sudo supervisorctl restart all
 
 You can also start supervisor with the ordered-online application directly by executing:
 ```bash
-$ sudo /usr/bin/supervisord -n -c /etc/supervisor/conf.d/supervisord.conf  
+$ sudo /usr/bin/supervisord -n -c /etc/supervisor/conf.d/supervisord.conf
 ```
 
 Note that you may want to add the supervisord, supervisorctl and unix_http_server blocks mentioned above.
+`````
