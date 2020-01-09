@@ -138,10 +138,10 @@ Symlink it:
 $ sudo ln -s $PWD/supervisor.conf /etc/supervisor/conf.d/supervisor.conf
 ```
 
-Copy the nginx configuration `contao` into `/etc/nginx/sites-available`
+Copy the nginx configuration `nginx.conf` into `/etc/nginx/sites-available`
 
 ```bash
-$ sudo cp contao /etc/nginx/sites-available/
+$ sudo cp nginx.conf /etc/nginx/sites-available/contao.local.conf
 ```
 
 The `sites-available` directory of nginx should always contain the configurations of all available web servers.
@@ -149,7 +149,7 @@ In contrast, the `sites-enabled` directory should contain symlinks to the config
 We will create this by executing:
 
 ```bash
-$ sudo ln -s /etc/nginx/sites-available/contao /etc/nginx/sites-enabled/contao
+$ sudo ln -s /etc/nginx/sites-available/contao.local.conf /etc/nginx/sites-enabled/contao.local.conf
 ```
 
 If you would then like to currently disable the ordered.online domain while running nginx for other web server,
@@ -159,7 +159,7 @@ you could simply delete the symlink inside `sites-enabled`, while this would sti
 _Alternative_
 Symlink it directly into sites-enabled:
 ```bash
-$ sudo ln -s $PWD/contao /etc/nginx/sites-enabled/contao
+$ sudo ln -s $PWD/nginx.conf /etc/nginx/sites-enabled/contao.local.conf
 ```
 
 ####  Start
